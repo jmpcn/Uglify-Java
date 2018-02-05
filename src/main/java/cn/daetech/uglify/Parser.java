@@ -9,6 +9,8 @@ public class Parser {
 		
 		Scanner scanner = new Scanner(fileName);
 		
+		Token token = scanner.nextToken();
+		
 	}
 
 }
