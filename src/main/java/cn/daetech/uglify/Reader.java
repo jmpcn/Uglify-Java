@@ -1,0 +1,65 @@
+package cn.daetech.uglify;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
+public class Reader {
+	
+	private int line;
+	private int col;
+	
+	InputStreamReader reader;
+
+	public Reader(String fileName) {
+		
+		File fl = new File(fileName);
+		
+		System.out.print(fl.getAbsolutePath());
+		
+		this.line = 1;
+		this.col = 0;
+		
+		 try {
+			this.reader = new InputStreamReader(new FileInputStream(fileName), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+	}
+	
+	
+	public char getChar()
+	{
+		char ch;
+		try {
+			ch = (char) reader.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+			return (char) -1;
+		}
+		
+		col++;
+		
+		if (ch == '\n')
+		{
+			line++;
+			col = 0;
+		}
+		
+		
+		return ch;
+		
+	}
+	
+	
+
+}
