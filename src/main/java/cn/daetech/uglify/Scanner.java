@@ -3,10 +3,19 @@ package cn.daetech.uglify;
 
 public class Scanner {
 	
+	private Reader reader;
 	
 	
-	public void nextToken()
+	
+	public Scanner(String fileName) {
+		reader = new Reader(fileName);
+	}
+
+
+
+	public Token nextToken()
 	{
+		return null;
 
 		
 	}

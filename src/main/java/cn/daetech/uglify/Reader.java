@@ -10,9 +10,9 @@ import java.io.UnsupportedEncodingException;
 public class Reader {
 	
 	private int line;
-	private int col;
+	private int column;
 	
-	InputStreamReader reader;
+	private InputStreamReader reader;
 
 	public Reader(String fileName) {
 		
@@ -21,7 +21,7 @@ public class Reader {
 		System.out.print(fl.getAbsolutePath());
 		
 		this.line = 1;
-		this.col = 0;
+		this.column = 0;
 		
 		 try {
 			this.reader = new InputStreamReader(new FileInputStream(fileName), "UTF-8");
@@ -47,12 +47,12 @@ public class Reader {
 			return (char) -1;
 		}
 		
-		col++;
+		column++;
 		
 		if (ch == '\n')
 		{
 			line++;
-			col = 0;
+			column = 0;
 		}
 		
 		
