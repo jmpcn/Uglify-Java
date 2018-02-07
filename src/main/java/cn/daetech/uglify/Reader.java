@@ -9,8 +9,12 @@ import java.io.UnsupportedEncodingException;
 
 public class Reader {
 	
-	private int line;
-	private int column;
+	
+	private Location location;
+	
+	private boolean isPeek;
+	
+	private char peekChar;
 	
 	private InputStreamReader reader;
 
@@ -20,8 +24,8 @@ public class Reader {
 		
 		System.out.print(fl.getAbsolutePath());
 		
-		this.line = 1;
-		this.column = 0;
+		this.location = new Location();
+		this.isPeek = false;
 		
 		 try {
 			this.reader = new InputStreamReader(new FileInputStream(fileName), "UTF-8");
@@ -39,27 +43,80 @@ public class Reader {
 	public char getChar()
 	{
 		char ch;
+		
+		if (isPeek)
+		{
+			ch = peekChar;
+			isPeek = false;
+		}
+		else
+		{
+			ch = readChar();
+		}
+		
+		if (isNewLineChar(ch))
+		{
+			location.newLine();
+			
+			// treat a \r\n sequence as a single \n
+			if((ch == '\r') && (peekChar() == '\n'))
+			{
+				forwardPeek();
+				ch = '\n';
+			}
+		}
+		else
+		{
+			location.next();	
+		}
+				
+		return ch;		
+	}
+	
+	public char peekChar()
+	{
+		if (isPeek)
+		{
+			return peekChar;
+		}	
+		else
+		{
+			isPeek = true;
+			peekChar = readChar();
+			return peekChar;
+		}
+	}
+	
+	public void forwardPeek()
+	{
+		isPeek = false;
+	}
+
+
+	private char readChar() {
+		char ch;
 		try {
 			ch = (char) reader.read();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();			
 			return (char) -1;
 		}
-		
-		column++;
-		
-		if (ch == '\n')
-		{
-			line++;
-			column = 0;
-		}
-		
-		
 		return ch;
-		
 	}
 	
 	
-
+	private boolean isNewLineChar(char ch)
+	{
+		if (ch == '\r')
+		{
+			return true;
+		}
+		
+		if (ch == '\n')
+		{
+			return true;
+		}
+		
+		return false;
+	}
 }
