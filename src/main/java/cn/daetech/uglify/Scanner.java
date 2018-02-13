@@ -10,6 +10,12 @@ public class Scanner {
 	public Scanner(String fileName) {
 		reader = new Reader(fileName);
 	}
+	
+	
+	private void skipWhitespace()
+	{
+		
+	}
 
 
 
