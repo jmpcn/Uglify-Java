@@ -33,13 +33,13 @@ public class Scanner {
 	private void readString(Token token) {
 		
 		String value = "";
-		char start = source.getNextChar();	
+		char quote = source.getNextChar();	
 		
         for (;;) {
         	
         	char ch = source.getNextChar();	
         	
-        	if (ch == start)
+        	if (ch == quote)
         	{
         		break;
         	}
@@ -57,8 +57,8 @@ public class Scanner {
 	public Token nextToken()
 	{
 		Token token = new Token(TokenType.EOF);
-		skipWhiteSpace();
 		
+		skipWhiteSpace();		
 		startToken(token);
 		
 		char ch = source.getPeekChar();
@@ -68,15 +68,94 @@ public class Scanner {
 			return token;
 		}
 		
-		if (ScannerHelp.isStringPrefix(ch))
-		{
-			
+		if (ScannerHelp.isStringQuote(ch))
+		{			
 			readString(token);
 			return token;
 		}
 		
+		if (ScannerHelp.isDot(ch))
+		{
+			handleDot(token);
+			return token;			
+		}
+		
+		if (ScannerHelp.isSlash(ch))
+		{
+			handleSlash(token);
+			return token;			
+		}
+		
+		if (ScannerHelp.isDigital(ch))
+		{
+			readNum(token);
+			return token;			
+		}
+		
+		if (ScannerHelp.isPunc(ch))
+		{
+			handlePunc(token);
+			return token;	
+		}
+		
+		if (ScannerHelp.isOperator(ch))
+		{
+			readOperator(token);
+			return token;
+		}
+		
+		if (ScannerHelp.isIdentifierStart(ch)) {
+			
+			readWord(token);
+			return token;
+		}
+	
 		
 		return token;
+		
+	}
+
+
+
+	private void readWord(Token token) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	private void readOperator(Token token) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	private void handlePunc(Token token) {
+		
+		String value = "" + source.getNextChar();			
+        token.setTokenType(TokenType.PUNC);
+        token.setValue(value);
+		token.setEndLocation(source.getLine(), source.getColumn());
+		
+	}
+
+
+
+	private void readNum(Token token) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	private void handleSlash(Token token) {
+		
+	}
+
+
+
+	private void handleDot(Token token) {
 		
 	}
 
