@@ -39,6 +39,20 @@ public class Scanner {
         	
         	char ch = source.getNextChar();	
         	
+        	if (ch == '\\')
+        	{
+        		ch = source.getPeekChar();
+        		if (ch >= '0' && ch <= '7')	
+        		{
+        			ch = readOctalEscapeChar();
+        		}
+        		else
+        		{
+        			ch = readCharacterEscapeChar();
+        		}
+        				
+        	}
+        	
         	if (ch == quote)
         	{
         		break;
@@ -50,6 +64,50 @@ public class Scanner {
         token.setTokenType(TokenType.STRING);
         token.setValue(value);
 		token.setEndLocation(source.getLine(), source.getColumn());
+	}
+
+	private char readCharacterEscapeChar() {
+		char ch = source.getNextChar();
+		switch (ch) {
+		case 'n':
+			return '\n';
+		case 'r':
+			return '\r';
+		case 't':
+			return '\t';			
+		case 'b':
+			return '\b';
+		case 'v':
+			return '\u000b';
+		case 'f':
+			return '\f';
+		case '0':
+			return '\0';
+		case 'x':
+			return (char)readHexBytes(2);
+		case 'u':
+			return (char)readHexBytes(4);				
+		default:
+			return ch;
+		}
+	}
+
+	private int readHexBytes(int i) {		
+		String value ="";
+        for (; i > 0; --i) {
+        	value = value + source.getNextChar();
+        }
+        
+        return Integer.valueOf(value, 16);		
+	}
+
+
+
+	private char readOctalEscapeChar() {
+		char ch = source.getNextChar();
+		
+		
+		return 0;
 	}
 
 
