@@ -104,10 +104,39 @@ public class Scanner {
 
 
 	private char readOctalEscapeChar() {
+		String value ="";
 		char ch = source.getNextChar();
 		
+		value = value + ch;
 		
-		return 0;
+		if (ch <= '3')
+		{
+			ch = source.getPeekChar();
+			if (ch >= '0' && ch <= '7')
+			{
+				ch = source.getNextChar();
+				value = value + ch;
+				
+				ch = source.getPeekChar();
+				if (ch >= '0' && ch <= '7')
+				{
+					ch = source.getNextChar();
+					value = value + ch;
+				}
+			}			
+		}
+		else if (ch <= '7')
+		{
+			ch = source.getPeekChar();
+			if (ch >= '0' && ch <= '7')
+			{
+				ch = source.getNextChar();
+				value = value + ch;
+			}			
+		}
+		
+		int octalValue = Integer.valueOf(value, 8);
+		return (char) octalValue;	
 	}
 
 
@@ -162,8 +191,7 @@ public class Scanner {
 			return token;
 		}
 		
-		if (ScannerHelp.isIdentifierStart(ch)) {
-			
+		if (ScannerHelp.isIdentifierStart(ch)) {			
 			readWord(token);
 			return token;
 		}
@@ -176,8 +204,53 @@ public class Scanner {
 
 
 	private void readWord(Token token) {
-		// TODO Auto-generated method stub
+		String word = read_name();
 		
+		int tokenType = ScannerHelp.getTokenType(word);
+		
+		token.setTokenType(tokenType);
+		token.setValue(word);
+		token.setEndLocation(source.getLine(), source.getColumn());				
+	}
+
+
+
+	private String read_name() {
+		
+		boolean backslash = false;
+		boolean escaped = false;
+		String name = "";
+		char ch;
+		
+		while ((ch = source.getPeekChar()) != -1) {			
+            if (!backslash) {
+                if (ch == '\\') {
+                	escaped = backslash = true;
+                	ch = source.getNextChar();
+                }
+                else if (ScannerHelp.isIdentifierChar(ch)) {
+                	ch = source.getNextChar();
+                	name += ch;
+                }
+                else  {
+                	break;
+                }
+            }
+            else {
+                if (ch != 'u') {
+                	//parse_error("Expecting UnicodeEscapeSequence -- uXXXX");
+                }
+                
+                ch = readCharacterEscapeChar();
+                if (!ScannerHelp.isIdentifierChar(ch)) {
+                	//parse_error("Unicode char: " + ch.charCodeAt(0) + " is not valid in identifier");
+                }
+                name += ch;
+                backslash = false;
+            }
+            
+		}
+		return name;
 	}
 
 
