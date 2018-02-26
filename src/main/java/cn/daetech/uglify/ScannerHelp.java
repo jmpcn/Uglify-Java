@@ -13,39 +13,95 @@ import java.util.Map;
 public class ScannerHelp {
 	
 	
-	private static Map<String, Integer> KEYWORDS = new HashMap<>();
+	private static Map<String, String> KEYWORDS = new HashMap<>();
+	
+	
+	private static Map<String, String> KEYWORDS_ATOM = new HashMap<>();
+	
+	
+	private static Map<String, String> OPERATORS = new HashMap<>();
+	
+	
 	
 	static {
-		KEYWORDS.put("break", TokenType.KEYWORD);
-		KEYWORDS.put("case", TokenType.KEYWORD);
-		KEYWORDS.put("catch", TokenType.KEYWORD);
-		KEYWORDS.put("const", TokenType.KEYWORD);
-		KEYWORDS.put("continue", TokenType.KEYWORD);
-		KEYWORDS.put("debugger", TokenType.KEYWORD);
-		KEYWORDS.put("default", TokenType.KEYWORD);
-		KEYWORDS.put("delete", TokenType.KEYWORD);
-		KEYWORDS.put("do", TokenType.KEYWORD);
-		KEYWORDS.put("else", TokenType.KEYWORD);
-		KEYWORDS.put("finally", TokenType.KEYWORD);
-		KEYWORDS.put("for", TokenType.KEYWORD);
-		KEYWORDS.put("function", TokenType.KEYWORD);
-		KEYWORDS.put("if", TokenType.KEYWORD);
-		KEYWORDS.put("in", TokenType.KEYWORD);		
-		KEYWORDS.put("instanceof", TokenType.KEYWORD);
-		KEYWORDS.put("new", TokenType.KEYWORD);
-		KEYWORDS.put("return", TokenType.KEYWORD);
-		KEYWORDS.put("switch", TokenType.KEYWORD);	
-		KEYWORDS.put("throw", TokenType.KEYWORD);
-		KEYWORDS.put("try", TokenType.KEYWORD);
-		KEYWORDS.put("typeof", TokenType.KEYWORD);
-		KEYWORDS.put("var", TokenType.KEYWORD);		
-		KEYWORDS.put("void", TokenType.KEYWORD);
-		KEYWORDS.put("while", TokenType.KEYWORD);
-		KEYWORDS.put("with", TokenType.KEYWORD);
+		KEYWORDS.put("break", "break");
+		KEYWORDS.put("case", "break");
+		KEYWORDS.put("catch", "catch");
+		KEYWORDS.put("const", "const");
+		KEYWORDS.put("continue", "continue");
+		KEYWORDS.put("debugger", "debugger");
+		KEYWORDS.put("default", "default");
+		KEYWORDS.put("delete", "delete");
+		KEYWORDS.put("do", "do");
+		KEYWORDS.put("else", "A");
+		KEYWORDS.put("finally", "A");
+		KEYWORDS.put("for", "A");
+		KEYWORDS.put("function", "A");
+		KEYWORDS.put("if", "A");
+		KEYWORDS.put("in", "A");		
+		KEYWORDS.put("instanceof", "A");
+		KEYWORDS.put("new", "A");
+		KEYWORDS.put("return", "A");
+		KEYWORDS.put("switch", "A");	
+		KEYWORDS.put("throw", "A");
+		KEYWORDS.put("try", "A");
+		KEYWORDS.put("typeof", "A");
+		KEYWORDS.put("var", "A");		
+		KEYWORDS.put("void", "A");
+		KEYWORDS.put("while", "A");
+		KEYWORDS.put("with", "A");
 		
-		KEYWORDS.put("false", TokenType.ATOM);
-		KEYWORDS.put("null", TokenType.ATOM);
-		KEYWORDS.put("true", TokenType.ATOM);		
+		KEYWORDS_ATOM.put("false", "A");
+		KEYWORDS_ATOM.put("null", "A");
+		KEYWORDS_ATOM.put("true", "A");	
+		
+		OPERATORS.put("in", "");
+		OPERATORS.put("instanceof", "");
+		OPERATORS.put("typeof", "");
+		OPERATORS.put("new", "");
+		OPERATORS.put("void", "");
+		OPERATORS.put("delete", "");
+		OPERATORS.put("++", "");
+		OPERATORS.put("--", "");	
+		OPERATORS.put("+", "");
+		OPERATORS.put("-", "");	
+		OPERATORS.put("!", "");			
+		OPERATORS.put("~", "");			
+		OPERATORS.put("&", "");	
+		OPERATORS.put("|", "");	
+		OPERATORS.put("^", "");	
+		OPERATORS.put("*", "");	
+		OPERATORS.put("/", "");	
+		OPERATORS.put("%", "");	
+		OPERATORS.put(">>", "");			
+		OPERATORS.put("<<", "");			
+		OPERATORS.put(">>>", "");			
+		OPERATORS.put("<", "");	
+		OPERATORS.put(">", "");	
+		OPERATORS.put("<=", "");	
+		OPERATORS.put(">=", "");
+		
+		OPERATORS.put("==", "");	
+		OPERATORS.put("===", "");	
+		OPERATORS.put("!=", "");	
+		OPERATORS.put("!==", "");	
+		OPERATORS.put("?", "");	
+		
+		OPERATORS.put("=", "");	
+		OPERATORS.put("+=", "");
+		OPERATORS.put("-=", "");
+		OPERATORS.put("/=", "");
+		OPERATORS.put("*=", "");
+		OPERATORS.put("%=", "");
+		OPERATORS.put(">>=", "");
+		OPERATORS.put("<<=", "");
+		OPERATORS.put(">>>=", "");
+		OPERATORS.put("|=", "");
+		OPERATORS.put("^=", "");
+		OPERATORS.put("&=", "");
+		OPERATORS.put("&&", "");
+		OPERATORS.put("||", "");
+		
 	}
 	
 	public static boolean isLetter(char ch) {
@@ -130,7 +186,7 @@ public class ScannerHelp {
 		}
 	}
 
-	public static boolean isOperator(char ch) {
+	public static boolean isOperatorChar(char ch) {
 		switch (ch) {
 		case '+':
 		case '-':
@@ -154,22 +210,33 @@ public class ScannerHelp {
 	
 	public static boolean isKeywords(String name)
 	{
-		Integer a = KEYWORDS.get(name);
-		return a.intValue() == TokenType.KEYWORD;
-				
+		return KEYWORDS.containsKey(name);				
+	}
+	
+	
+	public static boolean isOperators(String name)
+	{
+		return OPERATORS.containsKey(name);				
 	}
 	
 	public static int getTokenType(String name)
 	{
-		Integer a = KEYWORDS.get(name);
-		
-		if (a != null)
+		if (KEYWORDS_ATOM.containsKey(name))
 		{
-			return a.intValue();
+			return TokenType.ATOM;
 		}
 		
-		return TokenType.NAME;
+		if (!KEYWORDS.containsKey(name))
+		{
+			return TokenType.NAME;
+		}
 		
+		if (OPERATORS.containsKey(name))
+		{
+			return TokenType.OPERATOR;
+		}
+				
+		return TokenType.KEYWORD;		
 	}
 	
 	

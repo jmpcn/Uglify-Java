@@ -8,7 +8,7 @@ public class ScannerTest {
 
 	@Test
 	public void testNextToken() {
-		char[] buffer = "\"use strict\";\r\nfunction sum(x, y){ return x + y }"
+		char[] buffer = "\"\\x2ause strict\";\r\nfunction sum(x, y){ return x + y }"
 				.toCharArray();
 		Source source = new Source("src\\test\\resources\\a.txt", buffer);
 

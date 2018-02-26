@@ -185,7 +185,7 @@ public class Scanner {
 			return token;	
 		}
 		
-		if (ScannerHelp.isOperator(ch))
+		if (ScannerHelp.isOperatorChar(ch))
 		{
 			readOperator(token);
 			return token;
@@ -256,7 +256,26 @@ public class Scanner {
 
 
 	private void readOperator(Token token) {
-		// TODO Auto-generated method stub
+		
+		String value = "" + source.getNextChar();
+		
+		for(;;)
+		{
+			value = value + source.getPeekChar();
+			
+			if (ScannerHelp.isOperators(value))
+			{
+				source.getNextChar();				
+			}
+			else
+			{
+				break;
+			}			
+		}
+					
+        token.setTokenType(TokenType.OPERATOR);
+        token.setValue(value);
+		token.setEndLocation(source.getLine(), source.getColumn());
 		
 	}
 
@@ -281,6 +300,35 @@ public class Scanner {
 
 
 	private void handleSlash(Token token) {
+		char ch = source.getNextChar();
+
+		ch = source.getPeekChar();
+
+		if (ch == '/') {
+			Token commentTolen = new Token(TokenType.SINGLE_COMMENT);
+			readLineComment(commentTolen);
+		}
+
+		if (ch == '*') {
+			Token commentTolen = new Token(TokenType.MULTI_COMMENT);
+			readMultiLineComment(commentTolen);
+			
+			
+		}
+
+	}
+
+
+
+	private void readMultiLineComment(Token commentTolen) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	private void readLineComment(Token commentTolen) {
+		// TODO Auto-generated method stub
 		
 	}
 
