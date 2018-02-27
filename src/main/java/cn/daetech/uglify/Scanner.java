@@ -305,15 +305,15 @@ public class Scanner {
 		ch = source.getPeekChar();
 
 		if (ch == '/') {
+			token.setTokenType(TokenType.SINGLE_COMMENT);
 			Token commentTolen = new Token(TokenType.SINGLE_COMMENT);
 			readLineComment(commentTolen);
+			token.addComment(commentTolen);
 		}
-
-		if (ch == '*') {
+		else if (ch == '*') {
 			Token commentTolen = new Token(TokenType.MULTI_COMMENT);
-			readMultiLineComment(commentTolen);
-			
-			
+			readMultiLineComment(commentTolen);	
+			token.addComment(commentTolen);
 		}
 
 	}
@@ -328,7 +328,22 @@ public class Scanner {
 
 
 	private void readLineComment(Token commentTolen) {
-		// TODO Auto-generated method stub
+		char ch = source.getNextChar();
+
+		String value = "";
+		
+		while ((ch = source.getNextChar()) != -1) 
+		{
+			value = value + ch;
+			if (ch == '\n')
+			{
+				break;
+			}					
+		}
+				
+		commentTolen.setTokenType(TokenType.SINGLE_COMMENT);
+		commentTolen.setValue(value);
+		commentTolen.setEndLocation(source.getLine(), source.getColumn());
 		
 	}
 

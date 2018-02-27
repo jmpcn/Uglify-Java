@@ -1,5 +1,8 @@
 package cn.daetech.uglify;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Token {
 	
 	private int tokenType;
@@ -11,6 +14,8 @@ public class Token {
 	private int position;
 	
 	private Location endLocation;
+	
+	private List<Token> commentList;
 	
 	public Token(int tokenType) {
 		this.tokenType = tokenType;
@@ -45,6 +50,18 @@ public class Token {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public void addComment(Token token)
+	{
+		if (commentList == null)
+		{
+			commentList = new ArrayList<>();
+			
+		}
+		
+		commentList.add(token);
+		
 	}
 
 
